@@ -117,24 +117,6 @@ const TaskInfoModal: React.FC<TaskDetailModalProps> = ({ open, onClose, taskIdNu
         setTabValue(newValue);
     };
 
-    // const handleAddRole = () => {
-    //     const newRole = {
-    //         projectId: projectIdNum,
-    //         roleName: '',
-    //         roleLevel: roleInfo.length + 1,
-    //         description: ''
-    //     };
-    //     setRoleInfo([...roleInfo, newRole]);
-    // };
-    //
-    // const handleRemoveRole = () => {
-    //     const newList = [...roleInfo];
-    //     if(newList.length > 0) {
-    //         newList.pop();
-    //         setRoleInfo(newList);
-    //     }
-    // };
-
     useEffect(() => {
         axios.get(`/api/user`)
             .then((response) => {

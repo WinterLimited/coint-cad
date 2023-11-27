@@ -8,9 +8,10 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.0",
     "@mui/joy": "^5.0.0-alpha.89",
-    "@mui/lab": "^5.0.0-alpha.140",
-    "@mui/material": "^5.14.0",
+    "@mui/lab": "^5.0.0-alpha.153",
+    "@mui/material": "^5.14.18",
     "@mui/x-date-pickers": "^6.11.0",
+    "@mui/x-tree-view": "^6.17.0",
     "@react-spring/web": "^9.7.3",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
@@ -29,8 +30,10 @@
     "crypto-js": "^4.1.1",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
+    "draft-js": "^0.11.7",
     "file-saver": "^2.0.5",
     "frappe-gantt-react": "^0.2.2",
+    "fsevents": "^2.3.3",
     "gantt-task-react": "^0.3.9",
     "jsonwebtoken": "^9.0.1",
     "react": "^18.2.0",
@@ -38,12 +41,13 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
     "react-dropzone": "^14.2.3",
     "react-gantt-timeline": "^0.4.3",
     "react-quill": "^2.0.0",
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.14.2",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-transition-group": "^4.4.5",
     "recharts": "^2.7.2",
     "stream-browserify": "^3.0.0",
@@ -75,6 +79,9 @@
     ]
   },
   "devDependencies": {
-    "@types/file-saver": "^2.0.5"
+    "@types/file-saver": "^2.0.5",
+    "eslint": "^8.54.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-jest": "^27.6.0"
   }
 }

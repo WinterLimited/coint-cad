@@ -38,7 +38,6 @@ public class ProjectsService {
         for (ProjectUser projectUser : projectUserList) {
             ProjectsDto.GetProjectRes getProjectRes =
                     new ProjectsDto.GetProjectRes(projectsRepository.findById(projectUser.getProjects().getIdNum()).orElseThrow(null));
-            getProjectResList.add(getProjectRes);
         }
 
         return getProjectResList;

@@ -22,7 +22,7 @@ import {green, yellow, red, blue} from '@mui/material/colors';
 import axios from "../../../redux/axiosConfig";
 import ErrorModal from "../../common/ErrorModal";
 import "../../../assets/css/common/kanban-transition.css"
-import CloseIcon from "@mui/icons-material/Close";
+import StatusModal from "./StatusModal";
 
 const ItemType = {
     CARD: 'card',
@@ -362,6 +362,8 @@ const Kanban: React.FC = () => {
     const [isErrorModalOpen, setErrorModalOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [projectListOpen, setProjectListOpen] = useState(false);
+    const [taskIdNum, setTaskIdNum] = useState<number>(0);
+    const [taskStatusModalOpen, setTaskStatusModalOpen] = useState(false);
 
     const autocompleteOptions = options.map(option => option.projectName);
     const filteredOptions = searchTerm === ""
@@ -380,16 +382,22 @@ const Kanban: React.FC = () => {
             status: toColumn
         }
 
-        axios.put("/api/task/status", taskStatus)
-            .then((response) => {
-                if (response.status === 200) {
-                    setReloadData(prev => !prev);
-                }
-            })
-            .catch((error) => {
-                setErrorModalOpen(true)
-                setErrorMessage("업무 상태 변경에 실패했습니다.")
-            });
+        // status가 WORKING -> WAITING으로 변경되는 경우 공수관리 데이터 입력 Modal
+        if (toColumn === 'WAITING') {
+            setTaskIdNum(idNum);
+            setTaskStatusModalOpen(true);
+        } else {
+            axios.put("/api/task/status", taskStatus)
+                .then((response) => {
+                    if (response.status === 200) {
+                        setReloadData(prev => !prev);
+                    }
+                })
+                .catch((error) => {
+                    setErrorModalOpen(true)
+                    setErrorMessage("업무 상태 변경에 실패했습니다.")
+                });
+        }
     };
 
     const handleInputChange = (
@@ -665,6 +673,9 @@ const Kanban: React.FC = () => {
                 </DndProvider>
             </Box>
         </Grid>
+
+        {/*공수관리  Modal*/}
+        <StatusModal open={taskStatusModalOpen} onClose={() => setTaskStatusModalOpen(false)} idNum={taskIdNum} />
 
         {/*에러 발생 Modal*/}
         <ErrorModal

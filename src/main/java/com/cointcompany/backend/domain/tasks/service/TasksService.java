@@ -56,6 +56,15 @@ public class TasksService {
 
         return getTaskResList;
     }
+
+    @Transactional(readOnly = true)
+    public TasksDto.GetTaskInfo getTaskInfo (Long taskId) {
+
+        TasksDto.GetTaskInfo getTaskRes = new TasksDto.GetTaskInfo(tasksRepository.findById(taskId).orElseThrow());
+
+        return getTaskRes;
+    }
+
     @Transactional(readOnly = true)
     public List<TasksDto.GetTaskRes> getTask(Long projectId) {
 

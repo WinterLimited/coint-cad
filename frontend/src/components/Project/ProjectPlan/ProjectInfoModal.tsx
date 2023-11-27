@@ -385,10 +385,10 @@ const ProjectInfoModal: React.FC<ProjectDetailModalProps> = ({ open, onClose, pr
                                             <Typography variant="body2" sx={{ fontSize: '12px', color: '#888888' }}>작업 진행율:</Typography>
                                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                 <Box sx={{ width: '100%', mr: 1 }}>
-                                                    <LinearProgress variant="determinate" value={progress} />
+                                                    <LinearProgress variant="determinate" value={0} />
                                                 </Box>
                                                 <Box sx={{ minWidth: 35 }}>
-                                                    <Typography variant="body2" sx={{ fontSize: '14px' }}>{`${progress}%`}</Typography>
+                                                    <Typography variant="body2" sx={{ fontSize: '14px' }}>{`${0}%`}</Typography>
                                                 </Box>
                                             </Box>
                                         </Grid>

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {TableRow, TableCell, Checkbox, IconButton} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import {Data} from "./data";
 import { useNavigate } from 'react-router-dom';
+import TaskInfoModal from "./TaskInfoModal";
 
 type RowProps = {
     row: Data,
@@ -15,8 +16,16 @@ type RowProps = {
 // row의 각 key를 기준으로 TableCell을 구성함
 // 각 key는 Data의 key type인 keyof Data로 정의함
 const Row: React.FC<RowProps> = ({row, labelId, isItemSelected, handleClick}) => {
+    const [taskInfoModal, setTaskInfoModal] = useState(false);
+    const [selectedTaskIdNum, setSelectedTaskIdNum] = useState<number>(0);
 
     const navigate = useNavigate();
+
+    const handleTaskDetailClick = (event: React.MouseEvent<unknown>, id_num: number) => {
+        event.stopPropagation();  // 이벤트 전파 중단
+        setTaskInfoModal(true);
+        setSelectedTaskIdNum(id_num);
+    }
 
     return (
         <TableRow
@@ -109,7 +118,7 @@ const Row: React.FC<RowProps> = ({row, labelId, isItemSelected, handleClick}) =>
                             fontSize: "12px",
                             width: "120px"
                         }} align="center" key={key}>
-                            <IconButton onClick={() => handleRedirect}>  {/* 아이콘 버튼에 클릭 이벤트 연결 */}
+                            <IconButton onClick={(event) => handleTaskDetailClick(event, row.idNum)}>  {/* 아이콘 버튼에 클릭 이벤트 연결 */}
                                 <SearchIcon/>
                             </IconButton>
                         </TableCell>
@@ -121,6 +130,7 @@ const Row: React.FC<RowProps> = ({row, labelId, isItemSelected, handleClick}) =>
                     fontSize: "12px",
                 }} align="center" key={key}>{row[key]}</TableCell>;
             })}
+            <TaskInfoModal open={taskInfoModal} onClose={() => setTaskInfoModal(false)} taskIdNum={selectedTaskIdNum} />
         </TableRow>
     );
 };

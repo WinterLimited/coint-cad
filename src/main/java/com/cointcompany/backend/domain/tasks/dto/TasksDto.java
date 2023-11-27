@@ -138,6 +138,53 @@ public class TasksDto {
 
         }
     }
+
+    @NoArgsConstructor
+    @Data
+    public static class GetTaskInfo {
+        private Long idNum;
+
+        private String taskName;
+
+        private String description;
+
+        private String startDate;
+
+        private String endDate;
+
+        private String status;
+
+        private String regDate;
+
+        private String regUserid;
+
+        private String projectName;
+
+        private Long taskGroupIdNum;
+
+        private Long projectsIdNum;
+
+        public GetTaskInfo (Tasks tasks) {
+
+            this.idNum = tasks.getIdNum();
+            this.taskName = tasks.getTaskName();
+            this.description = tasks.getDescription();
+            this.startDate = String.valueOf(tasks.getStartDate());
+            this.endDate = String.valueOf(tasks.getEndDate());
+            this.status = tasks.getStatus();
+            this.regDate = String.valueOf(tasks.getRegDate());
+            this.regUserid = String.valueOf(tasks.getRegUserid());
+            this.projectName = tasks.getProjects().getProjectName();
+            if (tasks.getTaskGroup() != null) {
+                this.taskGroupIdNum = tasks.getTaskGroup().getIdNum();
+            } else {
+                this.taskGroupIdNum = null;
+            }
+            this.projectsIdNum = tasks.getProjects().getIdNum();
+
+        }
+    }
+
     @NoArgsConstructor
     @Data
     public static class GetGroupTask {

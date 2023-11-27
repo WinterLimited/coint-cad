@@ -37,6 +37,17 @@ public class TasksController {
         return new ResponseEntity<>(taskResList, HttpStatus.OK);
     }
 
+    @Operation(summary = "업무 상세 조회")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
+    @GetMapping("/info/{taskId}")
+    public ResponseEntity<TasksDto.GetTaskInfo> getTask (
+            @PathVariable Long taskId
+    ) {
+        TasksDto.GetTaskInfo taskRes = tasksService.getTaskInfo(taskId);
+
+        return new ResponseEntity<>(taskRes, HttpStatus.OK);
+    }
+
     @Operation(summary = "프로젝트 단위 업무 상세 조회")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/{projectId}")

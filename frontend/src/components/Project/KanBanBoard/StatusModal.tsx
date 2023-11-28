@@ -66,17 +66,13 @@ export default function StatusModal({ open, onClose, idNum }: ModalProps) {
 
     const handleProjectSave = async () => {
             try {
-                console.log()
-
-                const response = await axios.post('/api/project', {
+                const response = await axios.post(`/api/task/work/${idNum}`, {
                     taskId: idNum,
                     workTime: data.workTime,
                     type: 'DONE',   // TODO
                     description: data.description,
                 });
 
-                // 업무 공수 등록 성공 시, 성공 Modal 띄우고 모든 Modal 닫기
-                // 페이지 초기화
                 setSuccessModalOpen(true);
             } catch (error) {
                 setErrorModalOpen(true);

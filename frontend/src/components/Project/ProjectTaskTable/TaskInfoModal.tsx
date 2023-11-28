@@ -66,7 +66,13 @@ type Role = {
 type ProjectUser = {
     projectId: number,
     userId: number,
-    projectRoleId: number,
+    taskRoleId: number,
+}
+
+type Data = {
+    type: string,
+    workTime: number,
+    description: string,
 }
 
 interface TabPanelProps {
@@ -103,6 +109,7 @@ const TaskInfoModal: React.FC<TaskDetailModalProps> = ({ open, onClose, taskIdNu
     const [taskInfo, setTaskInfo] = useState<Task>({} as Task);
     const [roleInfo, setRoleInfo] = useState<Role[]>([]);
     const [userInfo, setUserInfo] = useState<ProjectUser[]>([]);
+    const [workInfo, setWorkInfo] = useState<Data[]>([]);
     const [expandedTasks, setExpandedTasks] = useState<number[]>([]);
     const [progress, setProgress] = useState<number>(0);
     const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -156,6 +163,16 @@ const TaskInfoModal: React.FC<TaskDetailModalProps> = ({ open, onClose, taskIdNu
                         })
                         .catch((error) => {
                             setErrorMessage("사용자 정보를 가져오는데 실패했습니다.");
+                            setErrorModalOpen(true);
+                        });
+
+                    // 공수 정보 가져오기
+                    axios.get(`/api/task/work/${taskIdNum}`)
+                        .then((response) => {
+                            setWorkInfo(response.data);
+                        })
+                        .catch((error) => {
+                            setErrorMessage("공수 정보를 가져오는데 실패했습니다.");
                             setErrorModalOpen(true);
                         });
 
@@ -298,6 +315,19 @@ const TaskInfoModal: React.FC<TaskDetailModalProps> = ({ open, onClose, taskIdNu
                                             </Typography>
                                         </Grid>
 
+                                        {/* 작업현황 정보 */}
+                                        <Grid item xs={3}>
+                                            <Typography variant="body2" sx={{ fontSize: '12px', color: '#888888' }}>공수시간:</Typography>
+                                            <Typography variant="body2" sx={{ fontSize: '14px' }}>
+                                                {
+                                                    // workInfo의 배열에 type이 'DONE'인 값들이 있으면 해당 값들의 workTime을 모두 더한 값을 반환
+                                                    workInfo.filter((work) => work.type === 'DONE').length > 0
+                                                        ? workInfo.filter((work) => work.type === 'DONE').map((work) => work.workTime).reduce((a, b) => a + b) + '시간'
+                                                        : '작업 진행중'
+                                                }
+                                            </Typography>
+                                        </Grid>
+
                                         <Grid item xs={12} sx={{ mt: 2 }}>
                                             <Typography variant="body2" sx={{ fontSize: '12px', color: '#888888' }}>작업 진행율:</Typography>
                                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -312,49 +342,160 @@ const TaskInfoModal: React.FC<TaskDetailModalProps> = ({ open, onClose, taskIdNu
 
                                     </Grid>
                                 </Box>
-                                <Box sx={{ mt: 2 }}>
-                                    <Typography variant="body2" sx={{ fontSize: '12px', color: '#888888' }}>작업자:</Typography>
-                                    {
-                                        isEditMode ? (
-                                            <>
-                                            </>
-                                        ) : (
-                                            // 편집없이 조회만 가능한 경우
-                                            <Table>
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <TableCell sx={tableHeaderStyles} align="center">작업자</TableCell>
-                                                        <TableCell sx={tableHeaderStyles} align="center">직책</TableCell>
-                                                        <TableCell sx={tableHeaderStyles} align="center">담당업무</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {userInfo.map((user, index) => (
-                                                        <TableRow key={index} sx={{ height: '30px' }}>
-                                                            <TableCell sx={tableCellStyles} align="center" >
-                                                                {
-                                                                    allUsers.filter((item) => item.idNum === user.userId)[0].name
-                                                                }
-                                                            </TableCell>
-                                                            <TableCell sx={tableCellStyles} align="center" >
-                                                                {
-                                                                    roleInfo.filter((item) => item.roleLevel === user.projectRoleId)[0]?.roleName
-                                                                }
-                                                            </TableCell>
-                                                            <TableCell sx={tableCellStyles} align="center" >
-                                                                {
-                                                                    "n개"
-                                                                }
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        )
-                                    }
-                                </Box>
                             </Box>
                         </Paper>
+
+                        <Tabs value={tabValue} onChange={handleChange} sx={{ marginTop: 2 }}>
+                            <Tab label="사용자조회" sx={{ "&.Mui-selected": { backgroundColor: 'white' } }} />
+                            <Tab label="공수관리" sx={{ "&.Mui-selected": { backgroundColor: 'white' } }} />
+                            <Tab label="이슈관리" sx={{ "&.Mui-selected": { backgroundColor: 'white' } }} />
+                        </Tabs>
+                        <TabPanel
+                            value={tabValue}
+                            index={0}
+                            boxStyle={{ backgroundColor: tabValue === 0 ? 'white' : 'inherit' }}
+                        >
+
+                            {
+                                isEditMode ? (
+                                    <>
+                                    </>
+                                ) : (
+                                    // 편집없이 조회만 가능한 경우
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell sx={tableHeaderStyles} align="center">작업자</TableCell>
+                                                <TableCell sx={tableHeaderStyles} align="center">직책</TableCell>
+                                                <TableCell sx={tableHeaderStyles} align="center">공수시간</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {userInfo.map((user, index) => (
+                                                <TableRow key={index} sx={{ height: '30px' }}>
+                                                    <TableCell sx={tableCellStyles} align="center" >
+                                                        {
+                                                            allUsers.filter((item) => item.idNum === user.userId)[0].name
+                                                        }
+                                                    </TableCell>
+                                                    <TableCell sx={tableCellStyles} align="center" >
+                                                        {
+                                                            roleInfo.filter((item) => item.roleLevel === user.taskRoleId)[0]?.roleName
+                                                        }
+                                                    </TableCell>
+                                                    <TableCell sx={tableCellStyles} align="center" >
+                                                        {
+                                                            workInfo.filter((item) => item.regUserid === user.userId).length > 0
+                                                                ? workInfo.filter((item) => item.regUserid === user.userId).map((item) => item.workTime).reduce((a, b) => a + b) + '시간'
+                                                                : '작업 진행중'
+                                                        }
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                )
+                            }
+
+                        </TabPanel>
+
+                        <TabPanel
+                            value={tabValue}
+                            index={1}
+                            boxStyle={{ backgroundColor: tabValue === 1 ? 'white' : 'inherit' }}
+                        >
+
+
+                            {
+                                isEditMode ? (
+                                    <>
+                                    </>
+                                ) : (
+                                    // 편집없이 조회만 가능한 경우
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell sx={tableHeaderStyles} align="center">등록자</TableCell>
+                                                <TableCell sx={tableHeaderStyles} align="center">공수시간</TableCell>
+                                                <TableCell sx={{
+                                                    ...tableHeaderStyles,
+                                                    width: '100px'
+                                                }} align="center">세부정보</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {workInfo
+                                                .filter((work) => work.type === 'DONE')
+                                                .map((work, index) => (
+                                                <TableRow key={index} sx={{ height: '30px' }}>
+                                                    <TableCell sx={tableCellStyles} align="center" >
+                                                        {
+                                                            allUsers.filter((item) => item.idNum === work.regUserid)[0]?.name
+                                                        }
+                                                    </TableCell>
+                                                    <TableCell sx={tableCellStyles} align="center" >
+                                                        {
+                                                            work.workTime + '시간'
+                                                        }
+                                                    </TableCell>
+                                                    <TableCell sx={tableCellStyles} align="center" >
+                                                        {
+
+                                                        }
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                )
+                            }
+
+                        </TabPanel>
+
+                        <TabPanel
+                            value={tabValue}
+                            index={2}
+                            boxStyle={{ backgroundColor: tabValue === 2 ? 'white' : 'inherit' }}
+                        >
+                            {
+                                isEditMode ? (
+                                    <>
+                                    </>
+                                ) : (
+                                    // 편집없이 조회만 가능한 경우
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell sx={tableHeaderStyles} align="center">등록자</TableCell>
+                                                <TableCell sx={{
+                                                    ...tableHeaderStyles,
+                                                    width: '100px'
+                                                }} align="center">세부정보</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {workInfo
+                                                .filter((work) => work.type === 'ISSUE')
+                                                .map((work, index) => (
+                                                    <TableRow key={index} sx={{ height: '30px' }}>
+                                                        <TableCell sx={tableCellStyles} align="center" >
+                                                            {
+                                                                allUsers.filter((item) => item.idNum === work.regUserid)[0]?.name
+                                                            }
+                                                        </TableCell>
+                                                        <TableCell sx={tableCellStyles} align="center" >
+                                                            {
+
+                                                            }
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                        </TableBody>
+                                    </Table>
+                                )
+                            }
+
+                        </TabPanel>
 
                     </DialogContent>
                 )

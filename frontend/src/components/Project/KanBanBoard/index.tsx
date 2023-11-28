@@ -386,18 +386,18 @@ const Kanban: React.FC = () => {
         if (toColumn === 'WAITING') {
             setTaskIdNum(idNum);
             setTaskStatusModalOpen(true);
-        } else {
-            axios.put("/api/task/status", taskStatus)
-                .then((response) => {
-                    if (response.status === 200) {
-                        setReloadData(prev => !prev);
-                    }
-                })
-                .catch((error) => {
-                    setErrorModalOpen(true)
-                    setErrorMessage("업무 상태 변경에 실패했습니다.")
-                });
         }
+
+        axios.put("/api/task/status", taskStatus)
+            .then((response) => {
+                if (response.status === 200) {
+                    setReloadData(prev => !prev);
+                }
+            })
+            .catch((error) => {
+                setErrorModalOpen(true)
+                setErrorMessage("업무 상태 변경에 실패했습니다.")
+            });
     };
 
     const handleInputChange = (

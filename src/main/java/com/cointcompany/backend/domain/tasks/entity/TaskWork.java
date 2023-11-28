@@ -28,6 +28,7 @@ public class TaskWork extends BaseEntity {
 
     private String type;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private boolean del = Boolean.FALSE;

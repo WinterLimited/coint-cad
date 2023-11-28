@@ -196,17 +196,19 @@ public class TasksService {
     }
 
     @Transactional(readOnly = true)
-    public List<TasksDto.TaskWorkDto> getTaskWork(Long taskId) {
+    public List<TasksDto.TaskWorkGetDto> getTaskWork(Long taskId) {
 
             List<TaskWork> taskWorkList = taskWorkRepository.findTaskWorkByTask_IdNum(taskId);
-            List<TasksDto.TaskWorkDto> taskWorkDtoList = new ArrayList<>();
+            List<TasksDto.TaskWorkGetDto> taskWorkDtoList = new ArrayList<>();
 
             for (TaskWork taskWork : taskWorkList) {
-                TasksDto.TaskWorkDto taskWorkDto = new TasksDto.TaskWorkDto(
+                TasksDto.TaskWorkGetDto taskWorkDto = new TasksDto.TaskWorkGetDto(
                         taskWork.getIdNum(),
                         taskWork.getWorkTime(),
                         taskWork.getType(),
-                        taskWork.getDescription()
+                        taskWork.getDescription(),
+                        taskWork.getRegUserid(),
+                        taskWork.getRegDate()
                 );
                 taskWorkDtoList.add(taskWorkDto);
             }

@@ -6,6 +6,7 @@ import com.cointcompany.backend.domain.tasks.entity.TaskGroup;
 import com.cointcompany.backend.domain.tasks.entity.Tasks;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,25 @@ public class TasksDto {
         }
     }
 
+    @NoArgsConstructor
+    @Data
+    public static class TaskWorkGetDto {
+        private Long taskId;
+        private Long workTime;
+        private String type;
+        private String description;
+        private Long regUserid;
+        private LocalDateTime regDate;
+
+        public TaskWorkGetDto (Long taskId, Long workTime, String type, String description, Long regUserid, LocalDateTime regDate) {
+            this.taskId = taskId;
+            this.workTime = workTime;
+            this.type = type;
+            this.description = description;
+            this.regUserid = regUserid;
+            this.regDate = regDate;
+        }
+    }
     @NoArgsConstructor
     @Data
     public static class TaskTagDto {

@@ -133,10 +133,10 @@ public class TasksController {
     @Operation(summary = "업무 공수 조회")
     @ApiResponse(responseCode = "200", description = "조회 성공")
     @GetMapping("/work/{taskId}")
-    public ResponseEntity<List<TasksDto.TaskWorkDto>> getTasksWork (
+    public ResponseEntity<List<TasksDto.TaskWorkGetDto>> getTasksWork (
             @PathVariable Long taskId
     ) {
-        List<TasksDto.TaskWorkDto> taskWorkResList = tasksService.getTaskWork(taskId);
+        List<TasksDto.TaskWorkGetDto> taskWorkResList = tasksService.getTaskWork(taskId);
 
         return new ResponseEntity<>(taskWorkResList, HttpStatus.OK);
     }

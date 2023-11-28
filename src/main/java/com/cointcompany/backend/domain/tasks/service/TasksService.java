@@ -30,6 +30,7 @@ public class TasksService {
     private final ProjectRolesRepository projectRolesRepository;
     private final TaskUserRepository taskUserRepository;
     private final TaskDepartmentRepository taskDepartmentRepository;
+    private final TaskWorkRepository taskWorkRepository;
     private final TaskTagRepository taskTagRepository;
     private final TaskGroupRepository taskGroupRepository;
     private final DepartmentsRepository departmentsRepository;
@@ -179,6 +180,40 @@ public class TasksService {
 
         return "SUCCESS";
     }
+
+    @Transactional
+    public TasksDto.TaskWorkDto saveTaskWork(TasksDto.TaskWorkDto taskWorkDto, Long taskId) {
+
+        TaskWork taskWork = TaskWork.of(
+                tasksRepository.findById(taskId).orElseThrow(),
+                taskWorkDto.getWorkTime(),
+                taskWorkDto.getType(),
+                taskWorkDto.getDescription()
+        );
+        taskWorkRepository.save(taskWork);
+
+        return taskWorkDto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<TasksDto.TaskWorkDto> getTaskWork(Long taskId) {
+
+            List<TaskWork> taskWorkList = taskWorkRepository.findTaskWorkByTask_IdNum(taskId);
+            List<TasksDto.TaskWorkDto> taskWorkDtoList = new ArrayList<>();
+
+            for (TaskWork taskWork : taskWorkList) {
+                TasksDto.TaskWorkDto taskWorkDto = new TasksDto.TaskWorkDto(
+                        taskWork.getIdNum(),
+                        taskWork.getWorkTime(),
+                        taskWork.getType(),
+                        taskWork.getDescription()
+                );
+                taskWorkDtoList.add(taskWorkDto);
+            }
+
+            return taskWorkDtoList;
+    }
+
     @Transactional
     public List<TasksDto.TaskTagDto> saveTaskTag(List<TasksDto.TaskTagDto> taskTagDtoList, Long taskId) {
 

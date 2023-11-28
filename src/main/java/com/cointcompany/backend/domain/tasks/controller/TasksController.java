@@ -117,6 +117,30 @@ public class TasksController {
         return new ResponseEntity<>(level, HttpStatus.OK);
     }
 
+    @Operation(summary = "업무 공수 신규 등록")
+    @ApiResponse(responseCode = "200", description = "등록 성공")
+    @PostMapping("/work/{taskId}")
+    public ResponseEntity<String> postTasksWork (
+            @PathVariable Long taskId,
+            @RequestBody TasksDto.TaskWorkDto taskWorkDto
+    ) {
+
+        tasksService.saveTaskWork(taskWorkDto, taskId);
+
+        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+    }
+
+    @Operation(summary = "업무 공수 조회")
+    @ApiResponse(responseCode = "200", description = "조회 성공")
+    @GetMapping("/work/{taskId}")
+    public ResponseEntity<List<TasksDto.TaskWorkDto>> getTasksWork (
+            @PathVariable Long taskId
+    ) {
+        List<TasksDto.TaskWorkDto> taskWorkResList = tasksService.getTaskWork(taskId);
+
+        return new ResponseEntity<>(taskWorkResList, HttpStatus.OK);
+    }
+
     @Operation(summary = "업무 태그 신규 등록")
     @ApiResponse(responseCode = "200", description = "등록 성공")
     @PostMapping("/tag/{projectId}")

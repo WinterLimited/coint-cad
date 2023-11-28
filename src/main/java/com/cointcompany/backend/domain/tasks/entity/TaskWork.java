@@ -13,8 +13,8 @@ import org.hibernate.annotations.Where;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "del = false")
-@SQLDelete(sql = "UPDATE task_tag SET del = true WHERE id_num = ?")
-public class TaskTag extends BaseEntity {
+@SQLDelete(sql = "UPDATE task_work SET del = true WHERE id_num = ?")
+public class TaskWork extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,23 +24,30 @@ public class TaskTag extends BaseEntity {
     @JoinColumn(name = "taskId")
     private Tasks task;
 
-    private String tagName;
+    private Long workTime;
+
+    private String type;
+
+    private String description;
 
     private boolean del = Boolean.FALSE;
 
-    public static TaskTag of(Tasks task, String tagName) {
-        return TaskTag.builder()
+    public static TaskWork of(Tasks task, Long workTime, String type, String description) {
+        return TaskWork.builder()
                 .task(task)
-                .tagName(tagName)
+                .workTime(workTime)
+                .type(type)
+                .description(description)
                 .del(false)
                 .build();
     }
 
     @Builder
-    public TaskTag(Tasks task, String tagName, Boolean del) {
+    public TaskWork(Tasks task, Long workTime, String type, String description, Boolean del) {
         this.task = task;
-        this.tagName = tagName;
+        this.workTime = workTime;
+        this.type = type;
+        this.description = description;
         this.del = del;
     }
-
 }

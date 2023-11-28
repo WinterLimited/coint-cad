@@ -44,6 +44,22 @@ public class TasksDto {
 
     @NoArgsConstructor
     @Data
+    public static class TaskWorkDto {
+        private Long taskId;
+        private Long workTime;
+        private String type;
+        private String description;
+
+        public TaskWorkDto (Long taskId, Long workTime, String type, String description) {
+            this.taskId = taskId;
+            this.workTime = workTime;
+            this.type = type;
+            this.description = description;
+        }
+    }
+
+    @NoArgsConstructor
+    @Data
     public static class TaskTagDto {
         private Long taskId;
         private String tagName;
@@ -233,6 +249,7 @@ public class TasksDto {
             this.status = tasks.getStatus();
         }
     }
+
     @NoArgsConstructor
     @Data
     public static class TaskStatus {
